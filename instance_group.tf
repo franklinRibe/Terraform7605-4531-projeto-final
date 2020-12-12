@@ -1,9 +1,8 @@
 resource "google_compute_region_instance_group_manager" "app-group" {
-  name = "app-group"
-
-  base_instance_name         = "app"
-  region                     = "us-central1"
-  distribution_policy_zones  = ["us-central1-a", "us-central1-b", "us-central1-c"]
+  name                      = var.instance_group_name
+  base_instance_name        = var.base_instance_name
+  region                    = var.region
+  distribution_policy_zones = var.policy_zones
 
   version {
     instance_template = google_compute_instance_template.app-template.self_link
@@ -11,19 +10,19 @@ resource "google_compute_region_instance_group_manager" "app-group" {
 
   auto_healing_policies {
     health_check      = google_compute_health_check.autohealing.id
-    initial_delay_sec = 300
+    initial_delay_sec = var.auto_healing_delay_sec
   }
 }
 
 resource "google_compute_health_check" "autohealing" {
-  name                = "autohealing-health-check"
-  check_interval_sec  = 5
-  timeout_sec         = 5
-  healthy_threshold   = 2
-  unhealthy_threshold = 10 
+  name                = var.backend_health_check_name
+  check_interval_sec  = var.check_interval_sec
+  timeout_sec         = var.timeout_sec
+  healthy_threshold   = var.healthy_threshold
+  unhealthy_threshold = var.unhealthy_threshold
 
   http_health_check {
-    request_path = "/"
-    port         = "80"
+    request_path = var.http_health_path
+    port         = var.http_health_port
   }
 }

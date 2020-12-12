@@ -4,12 +4,12 @@ resource "google_compute_instance_template" "app-template" {
 
   tags = var.template_tags
 
-  machine_type         = var.machine_type
-  can_ip_forward       = var.can_ip_forward
+  machine_type   = var.machine_type
+  can_ip_forward = var.can_ip_forward
 
   scheduling {
     automatic_restart   = var.automatic_restart
-    on_host_maintenance = var.maintenance 
+    on_host_maintenance = var.maintenance
   }
 
   // Create a new boot disk from an image
@@ -20,11 +20,11 @@ resource "google_compute_instance_template" "app-template" {
   }
 
   network_interface {
-    network    = google_compute_network.vpc.id  
+    network    = google_compute_network.vpc.id
     subnetwork = google_compute_subnetwork.usnet.id
 
-    access_config{
-        //EPHEMERAL_IP
+    access_config {
+      //EPHEMERAL_IP
     }
   }
 
@@ -32,6 +32,6 @@ resource "google_compute_instance_template" "app-template" {
     ssh-keys = var.ssh_pub_key
   }
 
-metadata_startup_script = var.script
+  metadata_startup_script = var.script
 
 }

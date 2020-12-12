@@ -1,15 +1,15 @@
 resource "google_compute_region_autoscaler" "autoscaler" {
-  name   = "autoscaler"
-  region = "us-central1"
+  name   = var.autoscaler_name
+  region = var.region
   target = google_compute_region_instance_group_manager.app-group.id
 
   autoscaling_policy {
-    max_replicas    = 10
-    min_replicas    = 3
-    cooldown_period = 60
+    max_replicas    = var.max_replicas
+    min_replicas    = var.min_replicas
+    cooldown_period = var.cooldown_period
 
     cpu_utilization {
-      target = 0.6
+      target = var.cpu_utilization
     }
   }
 }

@@ -1,7 +1,7 @@
 resource "google_compute_global_forwarding_rule" "forwarding" {
   name       = var.forwarding
   target     = google_compute_target_http_proxy.target_proxy.id
-  port_range = var.backend_ports 
+  port_range = var.backend_ports
 }
 
 resource "google_compute_target_http_proxy" "target_proxy" {
@@ -10,19 +10,18 @@ resource "google_compute_target_http_proxy" "target_proxy" {
 }
 
 resource "google_compute_url_map" "urlmap" {
-  name        = var.urlmap-name
-  description = "Url map do projeto"
+  name            = var.urlmap-name
   default_service = google_compute_backend_service.be_service.id
 }
 
 resource "google_compute_backend_service" "be_service" {
   name          = var.be_service_name
-  port_name     = "http"
-  protocol      = "HTTP"
-  timeout_sec   = 10
+  port_name     = var.backend_port_name
+  protocol      = var.backend_protocol
+  timeout_sec   = var.backend_timeout_sec
   health_checks = [google_compute_http_health_check.health_check.id]
-  backend  {
-      group     = google_compute_region_instance_group_manager.app-group.instance_group
+  backend {
+    group = google_compute_region_instance_group_manager.app-group.instance_group
   }
 }
 
